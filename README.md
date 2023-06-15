@@ -4,8 +4,7 @@
     
   + Technlogies Used
      + Java
-     + Spring Boot
-     + Spring Web
+     + Spring Boot 3
      + Spring Data JPA
      + H2 Database
      + Lombok
