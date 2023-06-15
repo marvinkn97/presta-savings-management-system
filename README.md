@@ -1,13 +1,13 @@
-#Spring Boot API for a simple savings system.
+# Spring Boot API for a simple savings system.
 
  + This API provides a simple savings system, allowing users to create savings accounts, deposit and withdraw funds, check their account balance, and view transaction history.
     
-   +Technlogies Used
-     +Java
-     +Spring Boot
-     +Spring Web
-     +Spring Data JPA
-     +H2 Database
-     +Lombok
+  + Technlogies Used
+     + Java
+     + Spring Boot
+     + Spring Web
+     + Spring Data JPA
+     + H2 Database
+     + Lombok
      
     
