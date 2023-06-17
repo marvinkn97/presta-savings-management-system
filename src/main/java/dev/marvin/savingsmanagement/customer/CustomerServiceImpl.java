@@ -2,15 +2,13 @@ package dev.marvin.savingsmanagement.customer;
 
 import dev.marvin.savingsmanagement.exception.NotFoundException;
 import lombok.AllArgsConstructor;
-import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
 @AllArgsConstructor
-@Primary
-public class JpaCustomerServiceImpl implements CustomerService {
+public class CustomerServiceImpl implements CustomerService {
 
     private final CustomerRepository customerRepository;
 
@@ -33,4 +31,5 @@ public class JpaCustomerServiceImpl implements CustomerService {
     public void deleteCustomerById(int id) {
         customerRepository.deleteById(id);
     }
+
 }

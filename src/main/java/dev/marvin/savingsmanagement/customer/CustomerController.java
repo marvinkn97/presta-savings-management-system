@@ -12,24 +12,24 @@ import org.springframework.web.bind.annotation.*;
 import java.math.BigDecimal;
 import java.util.List;
 
-@RestController
-@RequestMapping("/api/customers")
 @AllArgsConstructor
 @Tag(name = "Customer API")
+@RestController
+@RequestMapping(value = "/api/v1/customers", produces = "application/json")
 public class CustomerController {
 
     private final CustomerService customerService;
     private final AccountService accountService;
 
-
-    @GetMapping
+    @ResponseStatus(code = HttpStatus.OK)
     @Operation(summary = "Get All Customers")
+    @GetMapping
     public List<Customer> getAllCustomers() {
         return customerService.findAll();
     }
 
-    @GetMapping("/{customerId}")
     @Operation(summary = "Get Customer by ID")
+    @GetMapping("/{customerId}")
     public ResponseEntity<Customer> getCustomerById(@PathVariable("customerId") int id) {
         Customer customer = customerService.findCustomerById(id);
 
@@ -39,12 +39,18 @@ public class CustomerController {
         return ResponseEntity.notFound().build();
     }
 
+    @Operation(summary = "Create New Customer")
     @PostMapping
-    @Operation(summary = "Create Customer")
     public ResponseEntity<Customer> createCustomer(@RequestBody CustomerDto customerDto) {
 
-        Customer newCustomer = new Customer();
-        customerEntry(customerDto, newCustomer);
+        Customer newCustomer = Customer.builder()
+                .firstName(customerDto.firstName())
+                .lastName(customerDto.lastName())
+                .email(customerDto.email())
+                .nationalID(customerDto.nationalID())
+                .phoneNumber(customerDto.phoneNumber())
+                .address(customerDto.address())
+                .build();
 
         Customer createdCustomer = customerService.save(newCustomer);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdCustomer);
@@ -56,7 +62,12 @@ public class CustomerController {
         Customer existingCustomer = customerService.findCustomerById(id);
 
         if (existingCustomer != null) {
-            customerEntry(customerDto, existingCustomer);
+            existingCustomer.setFirstName(customerDto.firstName());
+            existingCustomer.setLastName(customerDto.lastName());
+            existingCustomer.setEmail(customerDto.email());
+            existingCustomer.setPhoneNumber(customerDto.phoneNumber());
+            existingCustomer.setNationalID(customerDto.nationalID());
+            existingCustomer.setAddress(customerDto.address());
 
             Customer updatedCustomer = customerService.save(existingCustomer);
 
@@ -75,7 +86,7 @@ public class CustomerController {
 
 
     @GetMapping("/{customerId}/savings")
-    @Operation(summary = "Track the total savings amount for each customer")
+    @Operation(summary = "Track the total savings amount By Customer ID")
     public ResponseEntity<BigDecimal> getCustomerTotalSavings(@PathVariable("customerId") int id) {
         List<Account> customerAccounts = accountService.findAccountsByCustomerId(id);
 
@@ -88,7 +99,7 @@ public class CustomerController {
     }
 
     @GetMapping("/total")
-    @Operation(summary = "Track the total savings amount across all Customers" )
+    @Operation(summary = "Track the total savings amount across all Customers")
     public ResponseEntity<BigDecimal> getCustomersTotalSavings() {
         List<Account> allAccounts = accountService.findAllAccounts();
 
@@ -99,14 +110,4 @@ public class CustomerController {
         }
         return ResponseEntity.ok(total);
     }
-
-    private void customerEntry(@RequestBody CustomerDto customerDto, Customer customer) {
-        customer.setFirstName(customerDto.firstName());
-        customer.setLastName(customerDto.lastName());
-        customer.setEmail(customerDto.email());
-        customer.setPhoneNumber(customerDto.phoneNumber());
-        customer.setNationalID(customerDto.nationalID());
-        customer.setAddress(customerDto.address());
-    }
-
 }

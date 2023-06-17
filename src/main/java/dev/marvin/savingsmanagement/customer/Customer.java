@@ -5,6 +5,8 @@ import dev.marvin.savingsmanagement.account.Account;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
@@ -14,8 +16,10 @@ import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
+@Builder
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "customers")
 public class Customer {
@@ -37,16 +41,17 @@ public class Customer {
     private String phoneNumber;
 
     @NotNull(message = "National ID Number is required")
-    @Column(name = "national_id_number", unique = true)
+    @Column(unique = true)
     private String nationalID;
 
     @NotNull(message = "Address is required")
     private String address;
 
     @CreationTimestamp
-    private LocalDateTime createdAt;
+    private LocalDateTime createdDate;
+
     @UpdateTimestamp
-    private LocalDateTime updatedAt;
+    private LocalDateTime updatedDate;
 
     @JsonIgnore
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)

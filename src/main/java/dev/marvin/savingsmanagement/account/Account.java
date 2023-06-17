@@ -5,6 +5,8 @@ import dev.marvin.savingsmanagement.customer.Customer;
 import dev.marvin.savingsmanagement.transaction.Transaction;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
@@ -14,6 +16,9 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
+
+@Builder
+@AllArgsConstructor
 @Data
 @NoArgsConstructor
 @Entity
