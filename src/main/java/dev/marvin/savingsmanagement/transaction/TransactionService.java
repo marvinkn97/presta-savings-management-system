@@ -2,7 +2,7 @@ package dev.marvin.savingsmanagement.transaction;
 
 import dev.marvin.savingsmanagement.account.Account;
 import dev.marvin.savingsmanagement.account.AccountService;
-import dev.marvin.savingsmanagement.exception.NotFoundException;
+import dev.marvin.savingsmanagement.exception.ResourceNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -20,7 +20,7 @@ public class TransactionService {
     }
 
     public Transaction findTransactionById(int id) {
-        return transactionRepository.findTransactionById(id).orElseThrow(() -> new NotFoundException("Transaction with id: " + id + " not found"));
+        return transactionRepository.findTransactionById(id).orElseThrow(() -> new ResourceNotFoundException("Transaction with id: " + id + " not found"));
     }
 
     public List<Transaction> findTransactionsByCustomerId(int id) {

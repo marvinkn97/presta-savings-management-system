@@ -17,6 +17,7 @@ public class SavingsManagementApplication {
     public static void main(String[] args) {
 
         SpringApplication.run(SavingsManagementApplication.class, args);
+
     }
 
     @Bean

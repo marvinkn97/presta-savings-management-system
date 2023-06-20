@@ -25,7 +25,7 @@ public class CustomerController {
     @Operation(summary = "Get All Customers")
     @GetMapping
     public List<Customer> getAllCustomers() {
-        return customerService.findAll();
+        return customerService.findAllCustomers();
     }
 
     @Operation(summary = "Get Customer by ID")
@@ -41,41 +41,19 @@ public class CustomerController {
 
     @Operation(summary = "Create New Customer")
     @PostMapping
-    public ResponseEntity<Customer> createCustomer(@RequestBody CustomerDto customerDto) {
+    public ResponseEntity<Customer> registerCustomer(@RequestBody CustomerDto customerDto) {
 
-        Customer newCustomer = Customer.builder()
-                .firstName(customerDto.firstName())
-                .lastName(customerDto.lastName())
-                .email(customerDto.email())
-                .nationalID(customerDto.nationalID())
-                .phoneNumber(customerDto.phoneNumber())
-                .address(customerDto.address())
-                .build();
-
-        Customer createdCustomer = customerService.save(newCustomer);
+        Customer createdCustomer = customerService.createCustomer(customerDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdCustomer);
     }
 
     @PutMapping("/{customerId}")
     @Operation(summary = "Update Customer by ID")
     public ResponseEntity<Customer> updateCustomer(@PathVariable("customerId") int id, @RequestBody CustomerDto customerDto) {
-        Customer existingCustomer = customerService.findCustomerById(id);
 
-        if (existingCustomer != null) {
-            existingCustomer.setFirstName(customerDto.firstName());
-            existingCustomer.setLastName(customerDto.lastName());
-            existingCustomer.setEmail(customerDto.email());
-            existingCustomer.setPhoneNumber(customerDto.phoneNumber());
-            existingCustomer.setNationalID(customerDto.nationalID());
-            existingCustomer.setAddress(customerDto.address());
-
-            Customer updatedCustomer = customerService.save(existingCustomer);
-
-            return ResponseEntity.ok(updatedCustomer);
-        }
-        return ResponseEntity.notFound().build();
+        Customer updatedCustomer = customerService.updateCustomer(id, customerDto);
+        return ResponseEntity.ok(updatedCustomer);
     }
-
 
     @DeleteMapping("/{customerId}")
     @Operation(summary = "Delete Customer by ID")
@@ -84,30 +62,34 @@ public class CustomerController {
         return ResponseEntity.ok("Customer deleted successfully");
     }
 
-
     @GetMapping("/{customerId}/savings")
     @Operation(summary = "Track the total savings amount By Customer ID")
-    public ResponseEntity<BigDecimal> getCustomerTotalSavings(@PathVariable("customerId") int id) {
-        List<Account> customerAccounts = accountService.findAccountsByCustomerId(id);
+    public ResponseEntity<BigDecimal> getCustomerTotalSavings(@PathVariable("customerId") int customerId) {
+
+        List<Account> customerAccounts = accountService.findAccountsByCustomerId(customerId);
 
         BigDecimal totalSavings = BigDecimal.ZERO;
         for (Account account : customerAccounts) {
             totalSavings = totalSavings.add(account.getBalance());
-
         }
+
+//        BigDecimal totalSavings = customerService.getCustomerTotalSavings(customerId);
+
         return ResponseEntity.ok(totalSavings);
     }
 
     @GetMapping("/total")
     @Operation(summary = "Track the total savings amount across all Customers")
     public ResponseEntity<BigDecimal> getCustomersTotalSavings() {
-        List<Account> allAccounts = accountService.findAllAccounts();
 
+        List<Account> allAccounts = accountService.findAllAccounts();
         BigDecimal total = BigDecimal.ZERO;
 
         for (Account account : allAccounts) {
             total = total.add(account.getBalance());
         }
+
+//        BigDecimal total = customerService.getCustomersTotalSavings();
         return ResponseEntity.ok(total);
     }
 }

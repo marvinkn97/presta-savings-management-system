@@ -1,14 +1,16 @@
 package dev.marvin.savingsmanagement.customer;
 
-import dev.marvin.savingsmanagement.exception.NotFoundException;
+import dev.marvin.savingsmanagement.exception.ResourceNotFoundException;
 import lombok.AllArgsConstructor;
-import org.springframework.stereotype.Service;
+import org.springframework.context.annotation.Primary;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-@Service
 @AllArgsConstructor
-public class CustomerServiceImpl implements CustomerService {
+@Primary
+@Repository
+public class CustomerDaoJpaImpl implements CustomerDao {
 
     private final CustomerRepository customerRepository;
 
@@ -19,7 +21,7 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public Customer findCustomerById(int id) {
-        return customerRepository.findCustomerById(id).orElseThrow(() -> new NotFoundException("Customer with Id: " + id + " not found"));
+        return customerRepository.findCustomerById(id).orElseThrow(() -> new ResourceNotFoundException("Customer with id " + id + " not found"));
     }
 
     @Override
@@ -32,4 +34,8 @@ public class CustomerServiceImpl implements CustomerService {
         customerRepository.deleteById(id);
     }
 
+    @Override
+    public boolean existsCustomerWithEmail(String email) {
+        return customerRepository.existsCustomerByEmail(email);
+    }
 }

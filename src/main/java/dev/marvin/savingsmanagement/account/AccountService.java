@@ -2,7 +2,7 @@ package dev.marvin.savingsmanagement.account;
 
 import dev.marvin.savingsmanagement.customer.Customer;
 import dev.marvin.savingsmanagement.customer.CustomerService;
-import dev.marvin.savingsmanagement.exception.NotFoundException;
+import dev.marvin.savingsmanagement.exception.ResourceNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -22,7 +22,7 @@ public class AccountService {
     public Account findAccountById(int id){
         return accountRepository
                 .findAccountById(id)
-                .orElseThrow(()-> new NotFoundException("Account with ID: " + id + "not found"));
+                .orElseThrow(()-> new ResourceNotFoundException("Account with ID: " + id + "not found"));
     }
     public Account saveAccount(Account account){
         return accountRepository.save(account);
