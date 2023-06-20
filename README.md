@@ -6,7 +6,7 @@
      + Java
      + Spring Boot 3
      + Spring Data JPA
-     + H2 Database
+     + PostgreSQL
      + Lombok
      
     
