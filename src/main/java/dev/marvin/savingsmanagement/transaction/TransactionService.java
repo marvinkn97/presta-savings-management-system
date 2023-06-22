@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @AllArgsConstructor
@@ -32,7 +33,7 @@ public class TransactionService {
     }
 
 
-    public Transaction createTransaction(int customerId, TransactionDto transactionDto) {
+    public Transaction createTransaction(UUID customerId, TransactionDto transactionDto) {
         Account account = accountService.findAccountById(transactionDto.accountId());
         BigDecimal amount = transactionDto.amount();
         TransactionType transactionType = TransactionType.valueOf(transactionDto.transactionType());
@@ -49,7 +50,7 @@ public class TransactionService {
             }
             account.setBalance(account.getBalance().subtract(amount));
         }
-        accountService.saveAccount(account);
+        accountService.save(account);
 
         Transaction transaction = new Transaction();
         transaction.setTransactionType(transactionType);

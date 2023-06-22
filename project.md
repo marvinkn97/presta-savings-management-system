@@ -1,5 +1,3 @@
-# Java Backend Developer Internship Test: Savings Management
-
 + Objective: Design and implement a Spring Boot API for a simple savings system.
 
  + Requirements:

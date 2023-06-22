@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/transactions")
@@ -62,7 +63,7 @@ public class TransactionController {
 
     @PostMapping("/customers/{customerId}")
     @Operation(summary = "Create Transaction by Customer ID [ TransactionType: DEPOSIT, WITHDRAWAL]")
-    public ResponseEntity<Transaction> createTransaction(@PathVariable("customerId") int customerId, @RequestBody TransactionDto transactionDto) {
+    public ResponseEntity<Transaction> createTransaction(@PathVariable("customerId") UUID customerId, @RequestBody TransactionDto transactionDto) {
         Transaction transaction = transactionService.createTransaction(customerId, transactionDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(transaction);
     }

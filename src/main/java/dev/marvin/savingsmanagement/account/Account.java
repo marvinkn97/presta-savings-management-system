@@ -16,37 +16,34 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 
 @Builder
 @AllArgsConstructor
 @Data
 @NoArgsConstructor
 @Entity
-@Table(name = "accounts")
 public class Account {
     @Id
-    @GeneratedValue
-    private Integer id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
 
     @NotNull(message = "Account Name is required")
     private String name;
-
-    @Column(unique = true)
-    private String accountNumber;
 
     @NotNull(message = "Account Type is required")
     @Enumerated(EnumType.STRING)
     private AccountType accountType;
 
-    private BigDecimal balance = new BigDecimal(0);
+    private BigDecimal balance;
 
     @CreationTimestamp
-    private LocalDateTime createdAt;
+    private LocalDateTime createdDate;
 
     @UpdateTimestamp
-    private LocalDateTime updatedAt;
+    private LocalDateTime updatedDate;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "customer_id", referencedColumnName = "id")
     private Customer customer;
 
