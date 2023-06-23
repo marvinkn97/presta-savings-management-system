@@ -21,7 +21,7 @@ public class TransactionController {
     @Operation(summary = "Get All Transactions")
     public ResponseEntity<List<Transaction>> getAllTransactions() {
 
-        List<Transaction> transactions = transactionService.findAll();
+        List<Transaction> transactions = transactionService.findAllTransactions();
 
         if (transactions.isEmpty()) {
             return ResponseEntity.noContent().build();
@@ -32,14 +32,14 @@ public class TransactionController {
 
     @GetMapping("/{transactionId}")
     @Operation(summary = "Get Transaction by ID")
-    public ResponseEntity<Transaction> getTransactionById(@PathVariable("transactionId") int id) {
+    public ResponseEntity<Transaction> getTransactionById(@PathVariable("transactionId") UUID id) {
         Transaction transaction = transactionService.findTransactionById(id);
         return ResponseEntity.ok(transaction);
     }
 
     @GetMapping("/accounts/{accountId}")
     @Operation(summary = "Get Transactions by Account ID")
-    public ResponseEntity<List<Transaction>> getTransactionsByAccountId(@PathVariable("accountId") int id) {
+    public ResponseEntity<List<Transaction>> getTransactionsByAccountId(@PathVariable("accountId") UUID id) {
 
         List<Transaction> transactions = transactionService.findTransactionsByAccountId(id);
         if (transactions.isEmpty()) {
@@ -51,7 +51,7 @@ public class TransactionController {
 
     @GetMapping("/customers/{customerId}")
     @Operation(summary = "Get All Transactions by Customer ID")
-    public ResponseEntity<List<Transaction>> getTransactionsByCustomerId(@PathVariable("customerId") int id) {
+    public ResponseEntity<List<Transaction>> getTransactionsByCustomerId(@PathVariable("customerId") UUID id) {
 
         List<Transaction> transactions = transactionService.findTransactionsByCustomerId(id);
         if (transactions.isEmpty()) {

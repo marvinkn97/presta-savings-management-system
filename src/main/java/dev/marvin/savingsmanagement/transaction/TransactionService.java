@@ -2,7 +2,6 @@ package dev.marvin.savingsmanagement.transaction;
 
 import dev.marvin.savingsmanagement.account.Account;
 import dev.marvin.savingsmanagement.account.AccountService;
-import dev.marvin.savingsmanagement.exception.ResourceNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -13,23 +12,23 @@ import java.util.UUID;
 @Service
 @AllArgsConstructor
 public class TransactionService {
-    private final TransactionRepository transactionRepository;
+    private final TransactionDao transactionDao;
     private final AccountService accountService;
 
-    public List<Transaction> findAll() {
-        return transactionRepository.findAll();
+    public List<Transaction> findAllTransactions() {
+        return transactionDao.findAllTransactions();
     }
 
-    public Transaction findTransactionById(int id) {
-        return transactionRepository.findTransactionById(id).orElseThrow(() -> new ResourceNotFoundException("Transaction with id: " + id + " not found"));
+    public Transaction findTransactionById(UUID transactionId) {
+        return transactionDao.findTransactionById(transactionId);
     }
 
-    public List<Transaction> findTransactionsByCustomerId(int id) {
-        return transactionRepository.findTransactionByCustomerId(id);
+    public List<Transaction> findTransactionsByCustomerId(UUID customerId) {
+        return transactionDao.findTransactionByCustomerId(customerId);
     }
 
-    public List<Transaction> findTransactionsByAccountId(int id) {
-        return transactionRepository.findTransactionByAccount_Id(id);
+    public List<Transaction> findTransactionsByAccountId(UUID accountId) {
+        return transactionDao.findTransactionByAccount_Id(accountId);
     }
 
 
@@ -52,13 +51,14 @@ public class TransactionService {
         }
         accountService.save(account);
 
-        Transaction transaction = new Transaction();
-        transaction.setTransactionType(transactionType);
-        transaction.setAccount(account);
-        transaction.setAmount(amount);
-        transaction.setCustomerId(customerId);
+        Transaction transaction = Transaction.builder()
+                .transactionType(transactionType)
+                .account(account)
+                .amount(amount)
+                .customerId(customerId)
+                .build();
 
-        return transactionRepository.save(transaction);
+        return transactionDao.save(transaction);
 
     }
 
