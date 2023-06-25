@@ -17,5 +17,5 @@ public interface TransactionRepository extends JpaRepository<Transaction, Intege
     List<Transaction> findTransactionByAccount_Id(@Param("id") UUID id);
 
     @Query(value = "SELECT t FROM Transaction t where t.customerId = :id")
-    List<Transaction> findTransactionByCustomerId(UUID id);
+    List<Transaction> findTransactionByCustomerId(@Param("id") UUID id);
 }

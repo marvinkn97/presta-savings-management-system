@@ -31,7 +31,6 @@ public class TransactionService {
         return transactionDao.findTransactionByAccount_Id(accountId);
     }
 
-
     public Transaction createTransaction(UUID customerId, TransactionDto transactionDto) {
         Account account = accountService.findAccountById(transactionDto.accountId());
         BigDecimal amount = transactionDto.amount();
