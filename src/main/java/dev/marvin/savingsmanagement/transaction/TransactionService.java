@@ -2,6 +2,7 @@ package dev.marvin.savingsmanagement.transaction;
 
 import dev.marvin.savingsmanagement.account.Account;
 import dev.marvin.savingsmanagement.account.AccountService;
+import dev.marvin.savingsmanagement.exception.InsufficientAmountException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -37,14 +38,14 @@ public class TransactionService {
         TransactionType transactionType = TransactionType.valueOf(transactionDto.transactionType());
 
         if (amount.compareTo(BigDecimal.ZERO) <= 0) {
-            throw new IllegalArgumentException("Amount must be greater than zero");
+            throw new InsufficientAmountException("Amount must be greater than zero");
         }
 
         if (transactionType.equals(TransactionType.DEPOSIT)) {
             account.setBalance(account.getBalance().add(amount));
         } else if (transactionType.equals(TransactionType.WITHDRAWAL)) {
             if (account.getBalance().compareTo(amount) < 0) {
-                throw new IllegalArgumentException("Insufficient balance");
+                throw new InsufficientAmountException("Insufficient balance");
             }
             account.setBalance(account.getBalance().subtract(amount));
         }
