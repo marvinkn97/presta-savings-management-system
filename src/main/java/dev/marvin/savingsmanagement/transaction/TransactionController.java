@@ -20,13 +20,10 @@ public class TransactionController {
     @GetMapping
     @Operation(summary = "Get All Transactions")
     public ResponseEntity<List<Transaction>> getAllTransactions() {
-
         List<Transaction> transactions = transactionService.findAllTransactions();
-
         if (transactions.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
-
         return ResponseEntity.ok(transactions);
     }
 
@@ -40,7 +37,6 @@ public class TransactionController {
     @GetMapping("/accounts/{accountId}")
     @Operation(summary = "Get Transactions by Account ID")
     public ResponseEntity<List<Transaction>> getTransactionsByAccountId(@PathVariable("accountId") UUID id) {
-
         List<Transaction> transactions = transactionService.findTransactionsByAccountId(id);
         if (transactions.isEmpty()) {
             return ResponseEntity.noContent().build();

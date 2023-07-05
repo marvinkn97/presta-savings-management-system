@@ -54,6 +54,6 @@ public class Customer {
     private LocalDateTime updatedDate;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "customer")
     private Set<Account> accounts = new HashSet<>();
 }

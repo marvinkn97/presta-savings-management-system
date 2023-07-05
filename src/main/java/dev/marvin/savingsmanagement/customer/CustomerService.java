@@ -5,6 +5,7 @@ import dev.marvin.savingsmanagement.account.AccountDto;
 import dev.marvin.savingsmanagement.account.AccountService;
 import dev.marvin.savingsmanagement.account.AccountType;
 import dev.marvin.savingsmanagement.exception.DuplicateResourceException;
+import dev.marvin.savingsmanagement.exception.RequestValidationException;
 import dev.marvin.savingsmanagement.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -29,34 +30,65 @@ public class CustomerService {
         return customerDao.findCustomerById(id);
     }
 
-    public Customer createCustomer(CustomerDto customerDto) {
+    public Customer createCustomer(CustomerDto newCustomerRegistrationRequest) {
 
-        if (customerDao.existsCustomerWithEmail(customerDto.email())) {
+        if (customerDao.existsCustomerWithEmail(newCustomerRegistrationRequest.email())) {
             throw new DuplicateResourceException("email already taken");
         }
 
         Customer newCustomer = Customer.builder()
-                .firstName(customerDto.firstName())
-                .lastName(customerDto.lastName())
-                .email(customerDto.email())
-                .nationalID(customerDto.nationalID())
-                .phoneNumber(customerDto.phoneNumber())
-                .address(customerDto.address())
+                .firstName(newCustomerRegistrationRequest.firstName())
+                .lastName(newCustomerRegistrationRequest.lastName())
+                .email(newCustomerRegistrationRequest.email())
+                .nationalID(newCustomerRegistrationRequest.nationalID())
+                .phoneNumber(newCustomerRegistrationRequest.phoneNumber())
+                .address(newCustomerRegistrationRequest.address())
                 .build();
 
         return customerDao.save(newCustomer);
     }
 
-    public Customer updateCustomer(UUID id, CustomerDto customerDto) {
+    public Customer updateCustomer(UUID id, CustomerDto customerUpdateRequest) {
         Customer existingCustomer = customerDao.findCustomerById(id);
+        boolean changes = false;
 
         if (existingCustomer != null) {
-            existingCustomer.setFirstName(customerDto.firstName());
-            existingCustomer.setLastName(customerDto.lastName());
-            existingCustomer.setEmail(customerDto.email());
-            existingCustomer.setPhoneNumber(customerDto.phoneNumber());
-            existingCustomer.setNationalID(customerDto.nationalID());
-            existingCustomer.setAddress(customerDto.address());
+
+            if (customerUpdateRequest.firstName() != null && !customerUpdateRequest.firstName().equalsIgnoreCase(existingCustomer.getFirstName())) {
+                existingCustomer.setFirstName(customerUpdateRequest.firstName());
+                changes = true;
+            }
+
+            if (customerUpdateRequest.lastName() != null && !customerUpdateRequest.lastName().equalsIgnoreCase(existingCustomer.getLastName())) {
+                existingCustomer.setLastName(customerUpdateRequest.lastName());
+                changes = true;
+            }
+
+            if (customerUpdateRequest.email() != null && !customerUpdateRequest.email().equalsIgnoreCase(existingCustomer.getEmail())) {
+                if (customerDao.existsCustomerWithEmail(customerUpdateRequest.email())) {
+                    throw new DuplicateResourceException("email already taken");
+                }
+                existingCustomer.setEmail(customerUpdateRequest.email());
+                changes = true;
+            }
+
+            if (customerUpdateRequest.phoneNumber() != null && !customerUpdateRequest.phoneNumber().equals(existingCustomer.getPhoneNumber())) {
+                existingCustomer.setPhoneNumber(customerUpdateRequest.phoneNumber());
+                changes = true;
+            }
+
+            if (customerUpdateRequest.nationalID() != null && !customerUpdateRequest.nationalID().equals(existingCustomer.getNationalID())) {
+                existingCustomer.setNationalID(customerUpdateRequest.nationalID());
+                changes = true;
+            }
+
+            if (customerUpdateRequest.address() != null && !customerUpdateRequest.address().equals(existingCustomer.getAddress())) {
+                existingCustomer.setAddress(customerUpdateRequest.address());
+            }
+
+            if (!changes) {
+                throw new RequestValidationException("no data changes found");
+            }
 
             return customerDao.save(existingCustomer);
         }
@@ -88,19 +120,18 @@ public class CustomerService {
         return total;
     }
 
-    public Account createAccount(UUID customerId, AccountDto accountDto) {
+    public Account createAccount(UUID customerId, AccountDto newAccountRegistrationRequest) {
 
         Customer customer = customerDao.findCustomerById(customerId);
 
         Account newAccount = Account.builder()
-                .name(accountDto.name())
-                .accountType(AccountType.valueOf(accountDto.accountType()))
+                .name(newAccountRegistrationRequest.name())
+                .accountType(AccountType.valueOf(newAccountRegistrationRequest.accountType()))
                 .balance(BigDecimal.ZERO)
                 .customer(customer)
                 .build();
 
         return accountService.save(newAccount);
-
     }
 
 }

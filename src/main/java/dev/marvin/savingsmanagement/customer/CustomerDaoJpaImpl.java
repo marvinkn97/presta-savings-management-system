@@ -24,7 +24,7 @@ public class CustomerDaoJpaImpl implements CustomerDao {
 
     @Override
     public Customer findCustomerById(UUID id) {
-        return customerRepository.findCustomerById(id).orElseThrow(() -> new ResourceNotFoundException("Customer with id " + id + " not found"));
+        return customerRepository.findCustomerById(id).orElseThrow(() -> new ResourceNotFoundException("Customer with id [%s] not found".formatted(id)));
     }
 
     @Override

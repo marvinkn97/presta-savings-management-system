@@ -57,9 +57,9 @@ public class CustomerController {
 
     @DeleteMapping("/{customerId}")
     @Operation(summary = "Delete Customer by ID")
-    public ResponseEntity<String> deleteCustomerById(@PathVariable("customerId") UUID id) {
+    public ResponseEntity<Customer> deleteCustomerById(@PathVariable("customerId") UUID id) {
         customerService.deleteCustomerById(id);
-        return ResponseEntity.ok("Customer deleted successfully");
+        return ResponseEntity.noContent().build();
     }
 
     @Operation(summary = "Create New Account By Customer ID | AccountType : [ EDUCATION, PERSONAL, VACATION]")
