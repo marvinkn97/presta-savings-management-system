@@ -5,13 +5,14 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/transactions")
+@RequestMapping("/api/v1/transactions")
 @AllArgsConstructor
 @Tag(name = "Transaction API")
 public class TransactionController {
@@ -59,7 +60,7 @@ public class TransactionController {
 
     @PostMapping("/customers/{customerId}")
     @Operation(summary = "Create Transaction by Customer ID [ TransactionType: DEPOSIT, WITHDRAWAL]")
-    public ResponseEntity<Transaction> createTransaction(@PathVariable("customerId") UUID customerId, @RequestBody TransactionDto transactionDto) {
+    public ResponseEntity<Transaction> createTransaction(@PathVariable("customerId") UUID customerId, @Validated @RequestBody TransactionDto transactionDto) {
         Transaction transaction = transactionService.createTransaction(customerId, transactionDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(transaction);
     }

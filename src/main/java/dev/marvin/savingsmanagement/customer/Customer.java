@@ -1,14 +1,8 @@
 package dev.marvin.savingsmanagement.customer;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import dev.marvin.savingsmanagement.account.Account;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -18,33 +12,39 @@ import java.util.Set;
 import java.util.UUID;
 
 @Builder
-@Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
+@Setter
+@EqualsAndHashCode
+@ToString
 @Entity
+@Table(uniqueConstraints = {
+        @UniqueConstraint(name = "customer_email_unique", columnNames = "email"),
+        @UniqueConstraint(name = "customer_nationalId_unique", columnNames = "nationalID")
+})
 public class Customer {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(updatable = false)
     private UUID id;
 
-    @NotNull(message = "First Name is required")
+    @Column(nullable = false)
     private String firstName;
 
-    @NotNull(message = "Last Name is required")
+    @Column(nullable = false)
     private String lastName;
 
-    @Column(unique = true)
-    @Email
+    @Column(nullable = false)
     private String email;
 
-    @NotNull(message = "Phone is required")
+    @Column(nullable = false)
     private String phoneNumber;
 
-    @NotNull(message = "National ID Number is required")
-    @Column(unique = true)
+    @Column(nullable = false)
     private String nationalID;
 
-    @NotNull(message = "Address is required")
+    @Column(nullable = false)
     private String address;
 
     @CreationTimestamp
@@ -53,7 +53,6 @@ public class Customer {
     @UpdateTimestamp
     private LocalDateTime updatedDate;
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "customer")
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
     private Set<Account> accounts = new HashSet<>();
 }

@@ -15,7 +15,7 @@
    + Implement controllers and endpoints for each required functionality.✔️ 
    + Configure the appropriate database of your choice to store the data.✔️ 
    + Implement the necessary service layer to handle the business logic.✔️ 
-   + Ensure proper error handling and validation of incoming requests.❌ 
+   + Ensure proper error handling and validation of incoming requests.✔️ 
    + Implement unit tests to validate the functionality of the API endpoints.❌
 
 

@@ -21,22 +21,24 @@ import java.util.UUID;
 public class Transaction {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(updatable = false)
     private UUID id;
 
+    @Column(nullable = false)
     private UUID customerId;
 
     @CreationTimestamp
     private LocalDate transactionDate;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private TransactionType transactionType;
 
+    @Column(nullable = false)
     private BigDecimal amount;
 
     @ManyToOne
     @JoinColumn(name = "account_id", referencedColumnName = "id")
     private Account account;
-
-
 
 }

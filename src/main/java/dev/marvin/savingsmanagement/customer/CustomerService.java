@@ -21,7 +21,6 @@ public class CustomerService {
     private final CustomerDao customerDao;
     private final AccountService accountService;
 
-
     public List<Customer> findAllCustomers() {
         return customerDao.findAllCustomers();
     }
@@ -31,11 +30,9 @@ public class CustomerService {
     }
 
     public Customer createCustomer(CustomerDto newCustomerRegistrationRequest) {
-
         if (customerDao.existsCustomerWithEmail(newCustomerRegistrationRequest.email())) {
             throw new DuplicateResourceException("email already taken");
         }
-
         Customer newCustomer = Customer.builder()
                 .firstName(newCustomerRegistrationRequest.firstName())
                 .lastName(newCustomerRegistrationRequest.lastName())
@@ -92,7 +89,7 @@ public class CustomerService {
 
             return customerDao.save(existingCustomer);
         }
-        throw new ResourceNotFoundException("customer with id " + id + " not found");
+        throw new ResourceNotFoundException("customer with id [%s] not found".formatted(id));
     }
 
     public void deleteCustomerById(UUID id) {
@@ -126,7 +123,7 @@ public class CustomerService {
 
         Account newAccount = Account.builder()
                 .name(newAccountRegistrationRequest.name())
-                .accountType(AccountType.valueOf(newAccountRegistrationRequest.accountType()))
+                .accountType(AccountType.valueOf(newAccountRegistrationRequest.accountType().toUpperCase()))
                 .balance(BigDecimal.ZERO)
                 .customer(customer)
                 .build();

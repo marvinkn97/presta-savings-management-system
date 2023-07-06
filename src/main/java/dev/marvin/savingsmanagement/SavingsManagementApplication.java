@@ -14,7 +14,7 @@ public class SavingsManagementApplication {
     }
 
     @Bean
-    public WebMvcConfigurer corsConfig(){
+    public WebMvcConfigurer corsConfig() {
         return new WebMvcConfigurer() {
             @SuppressWarnings("NullableProblems")
             @Override
@@ -25,5 +25,4 @@ public class SavingsManagementApplication {
             }
         };
     }
-
 }

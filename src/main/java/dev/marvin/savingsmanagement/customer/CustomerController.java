@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
@@ -41,7 +42,7 @@ public class CustomerController {
 
     @Operation(summary = "Create New Customer")
     @PostMapping
-    public ResponseEntity<Customer> registerCustomer(@RequestBody CustomerDto customerDto) {
+    public ResponseEntity<Customer> registerCustomer(@Validated @RequestBody CustomerDto customerDto) {
 
         Customer createdCustomer = customerService.createCustomer(customerDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdCustomer);
@@ -49,7 +50,7 @@ public class CustomerController {
 
     @PutMapping("/{customerId}")
     @Operation(summary = "Update Customer by ID")
-    public ResponseEntity<Customer> updateCustomer(@PathVariable("customerId") UUID id, @RequestBody CustomerDto customerDto) {
+    public ResponseEntity<Customer> updateCustomer(@PathVariable("customerId") UUID id, @Validated @RequestBody CustomerDto customerDto) {
 
         Customer updatedCustomer = customerService.updateCustomer(id, customerDto);
         return ResponseEntity.ok(updatedCustomer);
@@ -62,7 +63,7 @@ public class CustomerController {
         return ResponseEntity.noContent().build();
     }
 
-    @Operation(summary = "Create New Account By Customer ID | AccountType : [ EDUCATION, PERSONAL, VACATION]")
+    @Operation(summary = "Create New Account By Customer ID [ AccountType : EDUCATION, PERSONAL, VACATION]")
     @PostMapping("/{customerId}/accounts/create")
     public ResponseEntity<Account> createAccount(@PathVariable("customerId") UUID customerId, @RequestBody AccountDto accountDto) {
         Account createdAccount = customerService.createAccount(customerId, accountDto);

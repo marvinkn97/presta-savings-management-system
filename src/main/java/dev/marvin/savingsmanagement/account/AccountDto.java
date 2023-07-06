@@ -1,4 +1,15 @@
 package dev.marvin.savingsmanagement.account;
 
-public record AccountDto(String name, String accountType) {
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+
+public record AccountDto(
+
+        @NotNull
+        @NotBlank
+        String name,
+
+        @NotNull
+        @NotBlank()
+        String accountType) {
 }
