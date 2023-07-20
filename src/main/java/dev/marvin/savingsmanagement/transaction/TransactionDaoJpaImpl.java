@@ -1,11 +1,10 @@
 package dev.marvin.savingsmanagement.transaction;
 
-import dev.marvin.savingsmanagement.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.UUID;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Repository
@@ -13,13 +12,12 @@ public class TransactionDaoJpaImpl implements TransactionDao {
     private final TransactionRepository transactionRepository;
 
     @Override
-    public List<Transaction> findAllTransactions() {
+    public List<Transaction> getAllTransactions() {
         return transactionRepository.findAll();
     }
 
-    @Override
-    public Transaction findTransactionById(UUID transactionId) {
-        return transactionRepository.findTransactionById(transactionId).orElseThrow(() -> new ResourceNotFoundException("transaction id: " + transactionId + " not found"));
+    public Optional<Transaction> getTransactionById(Long transactionId) {
+        return transactionRepository.findTransactionById(transactionId);
     }
 
     @Override
@@ -28,12 +26,12 @@ public class TransactionDaoJpaImpl implements TransactionDao {
     }
 
     @Override
-    public List<Transaction> findTransactionByAccount_Id(UUID accountId) {
+    public List<Transaction> getTransactionByAccount_Id(Long accountId) {
         return transactionRepository.findTransactionByAccount_Id(accountId);
     }
 
     @Override
-    public List<Transaction> findTransactionByCustomerId(UUID customerId) {
+    public List<Transaction> getTransactionByCustomerId(Long customerId) {
         return transactionRepository.findTransactionByCustomerId(customerId);
     }
 }

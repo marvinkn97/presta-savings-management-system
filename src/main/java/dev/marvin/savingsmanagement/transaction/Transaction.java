@@ -1,31 +1,26 @@
 package dev.marvin.savingsmanagement.transaction;
 
-import dev.marvin.savingsmanagement.account.Account;
+import dev.marvin.savingsmanagement.savingsaccount.Account;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.UUID;
 
-@Builder
-@AllArgsConstructor
-@Data
 @NoArgsConstructor
+@Data
 @Entity
-@Table(name = "transactions")
 public class Transaction {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
+    @SequenceGenerator(name = "transaction_id_sequence", sequenceName = "transaction_id_sequence")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "transaction_id_sequence" )
     @Column(updatable = false)
-    private UUID id;
+    private Long id;
 
     @Column(nullable = false)
-    private UUID customerId;
+    private Long customerId;
 
     @CreationTimestamp
     private LocalDate transactionDate;

@@ -1,11 +1,10 @@
-package dev.marvin.savingsmanagement.account;
+package dev.marvin.savingsmanagement.savingsaccount;
 
-import dev.marvin.savingsmanagement.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.UUID;
+import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
@@ -14,13 +13,13 @@ public class AccountDaoJpaImpl implements AccountDao {
     private final AccountRepository accountRepository;
 
     @Override
-    public List<Account> findAllAccounts() {
+    public List<Account> getAllAccounts() {
         return accountRepository.findAll();
     }
 
     @Override
-    public Account findAccountById(UUID accountId) {
-        return accountRepository.findAccountById(accountId).orElseThrow(() -> new ResourceNotFoundException("account with id " + accountId + " not found"));
+    public Optional<Account> getAccountById(Long accountId) {
+        return accountRepository.findAccountById(accountId);
     }
 
     @Override
@@ -29,12 +28,12 @@ public class AccountDaoJpaImpl implements AccountDao {
     }
 
     @Override
-    public void deleteAccountById(UUID accountId) {
+    public void deleteAccountById(Long accountId) {
         accountRepository.deleteById(accountId);
     }
 
     @Override
-    public List<Account> findAccountsByCustomerId(UUID customerId) {
+    public List<Account> getAccountsByCustomerId(Long customerId) {
         return accountRepository.findAccountsByCustomerId(customerId);
     }
 }

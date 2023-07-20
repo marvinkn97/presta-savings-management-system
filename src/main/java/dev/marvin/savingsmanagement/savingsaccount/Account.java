@@ -1,9 +1,10 @@
-package dev.marvin.savingsmanagement.account;
+package dev.marvin.savingsmanagement.savingsaccount;
 
 import dev.marvin.savingsmanagement.customer.Customer;
 import dev.marvin.savingsmanagement.transaction.Transaction;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -11,24 +12,22 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.UUID;
 
-@Builder
 @NoArgsConstructor
-@AllArgsConstructor
-@Getter
-@Setter
-@EqualsAndHashCode
-@ToString
+@Data
 @Entity
+@Table(uniqueConstraints = {
+        @UniqueConstraint(name = "account_number_unique", columnNames = "accountNumber"),
+})
 public class Account {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
+    @SequenceGenerator(name = "account_id_sequence", sequenceName ="account_id_sequence" )
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "account_id_sequence")
     @Column(updatable = false)
-    private UUID id;
+    private Long id;
 
-   @Column(nullable = false)
-    private String name;
+    @Column(nullable = false)
+    private String accountNumber;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -44,7 +43,7 @@ public class Account {
     private LocalDateTime updatedDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "customer_id", referencedColumnName = "id")
+    @JoinColumn(name = "customer_id")
     private Customer customer;
 
     @OneToMany(mappedBy = "account")

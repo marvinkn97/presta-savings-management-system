@@ -6,16 +6,15 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
-public interface TransactionRepository extends JpaRepository<Transaction, Integer> {
+public interface TransactionRepository extends JpaRepository<Transaction, Long> {
 
     @Query(value = "SELECT t FROM Transaction t WHERE t.id = :id")
-    Optional<Transaction> findTransactionById(@Param("id") UUID id);
+    Optional<Transaction> findTransactionById(@Param("id") Long transactionId);
 
     @Query(value = "SELECT t FROM Transaction t where t.account.id = :id")
-    List<Transaction> findTransactionByAccount_Id(@Param("id") UUID id);
+    List<Transaction> findTransactionByAccount_Id(@Param("id") Long accountId);
 
     @Query(value = "SELECT t FROM Transaction t where t.customerId = :id")
-    List<Transaction> findTransactionByCustomerId(@Param("id") UUID id);
+    List<Transaction> findTransactionByCustomerId(@Param("id") Long customerId);
 }

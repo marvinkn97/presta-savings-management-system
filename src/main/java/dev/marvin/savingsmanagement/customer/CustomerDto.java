@@ -1,25 +1,16 @@
 package dev.marvin.savingsmanagement.customer;
 
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotBlank;
 
 public record CustomerDto(
-        @NotNull(message = "First Name is required")
-        String firstName,
 
-        @NotNull(message = "Last Name is required")
-        String lastName,
+        @NotBlank(message = "Name is required") String name,
 
-        @NotNull(message = "Email is required")
-        @Email(regexp = "/&#40;[a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\\.[a-zA-Z0-9._-]+&#41;/g")
-        String email,
+        @NotBlank(message = "Email is required") String email,
 
-        @NotNull(message = "Phone Number is required")
-        String phoneNumber,
+        @NotBlank(message = "National ID is required") String nationalID,
 
-        @NotNull(message = "National ID Number is required")
-        String nationalID,
+        @NotBlank(message = "Phone Number is required") String phoneNumber,
 
-        @NotNull(message = "Address is required")
-        String address
-) {}
+        @NotBlank(message = "Address is required") String address) {
+}

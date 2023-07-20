@@ -1,12 +1,12 @@
 package dev.marvin.savingsmanagement.customer;
 
 import java.util.List;
-import java.util.UUID;
+import java.util.Optional;
 
 public interface CustomerDao {
-    List<Customer> findAllCustomers();
-    Customer findCustomerById(UUID id);
+    List<Customer> getAllCustomers();
+    Optional<Customer> getCustomerById(Long customerId);
     Customer save(Customer customer);
-    void deleteCustomerById(UUID id);
+    void deleteCustomerById(Long customerId);
     boolean existsCustomerWithEmail(String email);
 }

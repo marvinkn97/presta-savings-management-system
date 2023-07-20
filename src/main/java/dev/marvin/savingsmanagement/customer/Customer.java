@@ -1,48 +1,41 @@
 package dev.marvin.savingsmanagement.customer;
 
-import dev.marvin.savingsmanagement.account.Account;
+import dev.marvin.savingsmanagement.savingsaccount.Account;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.UUID;
 
-@Builder
 @NoArgsConstructor
-@AllArgsConstructor
-@Getter
-@Setter
-@EqualsAndHashCode
-@ToString
+@Data
 @Entity
 @Table(uniqueConstraints = {
         @UniqueConstraint(name = "customer_email_unique", columnNames = "email"),
-        @UniqueConstraint(name = "customer_nationalId_unique", columnNames = "nationalID")
+        @UniqueConstraint(name = "customer_nationalId_unique", columnNames = "nationalId"),
 })
 public class Customer {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
+    @SequenceGenerator(name = "customer_id_sequence", sequenceName = "customer_id_sequence" )
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "customer_id_sequence")
     @Column(updatable = false)
-    private UUID id;
+    private Long id;
 
     @Column(nullable = false)
-    private String firstName;
-
-    @Column(nullable = false)
-    private String lastName;
+    private String name;
 
     @Column(nullable = false)
     private String email;
 
     @Column(nullable = false)
-    private String phoneNumber;
+    private String nationalId;
 
     @Column(nullable = false)
-    private String nationalID;
+    private String phoneNumber;
 
     @Column(nullable = false)
     private String address;

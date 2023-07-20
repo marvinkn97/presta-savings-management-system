@@ -1,14 +1,14 @@
 package dev.marvin.savingsmanagement.transaction;
 
-import dev.marvin.savingsmanagement.account.Account;
-import dev.marvin.savingsmanagement.account.AccountService;
 import dev.marvin.savingsmanagement.exception.InsufficientAmountException;
+import dev.marvin.savingsmanagement.exception.ResourceNotFoundException;
+import dev.marvin.savingsmanagement.savingsaccount.Account;
+import dev.marvin.savingsmanagement.savingsaccount.AccountService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.UUID;
 
 @Service
 @AllArgsConstructor
@@ -16,26 +16,30 @@ public class TransactionService {
     private final TransactionDao transactionDao;
     private final AccountService accountService;
 
-    public List<Transaction> findAllTransactions() {
-        return transactionDao.findAllTransactions();
+    public List<Transaction> getAllTransactions() {
+        List<Transaction> transactions = transactionDao.getAllTransactions();
+        if (transactions.isEmpty()) {
+            throw new ResourceNotFoundException("no transactions");
+        }
+        return transactions;
     }
 
-    public Transaction findTransactionById(UUID transactionId) {
-        return transactionDao.findTransactionById(transactionId);
+    public Transaction getTransactionById(Long transactionId) {
+        return transactionDao.getTransactionById(transactionId).orElseThrow(() -> new ResourceNotFoundException("transaction id [%s] not found".formatted(transactionId)));
     }
 
-    public List<Transaction> findTransactionsByCustomerId(UUID customerId) {
-        return transactionDao.findTransactionByCustomerId(customerId);
+    public List<Transaction> getTransactionsByCustomerId(Long customerId) {
+        return transactionDao.getTransactionByCustomerId(customerId);
     }
 
-    public List<Transaction> findTransactionsByAccountId(UUID accountId) {
-        return transactionDao.findTransactionByAccount_Id(accountId);
+    public List<Transaction> getTransactionsByAccountId(Long accountId) {
+        return transactionDao.getTransactionByAccount_Id(accountId);
     }
 
-    public Transaction createTransaction(UUID customerId, TransactionDto transactionDto) {
-        Account account = accountService.findAccountById(transactionDto.accountId());
-        BigDecimal amount = transactionDto.amount();
-        TransactionType transactionType = TransactionType.valueOf(transactionDto.transactionType());
+    public Transaction createTransaction(Long customerId, TransactionDto newTransactionRequest) {
+        Account account = accountService.getAccountById(newTransactionRequest.accountId());
+        BigDecimal amount = newTransactionRequest.amount();
+        TransactionType transactionType = newTransactionRequest.transactionType();
 
         if (amount.compareTo(BigDecimal.ZERO) <= 0) {
             throw new InsufficientAmountException("Amount must be greater than zero");
@@ -51,12 +55,11 @@ public class TransactionService {
         }
         accountService.save(account);
 
-        Transaction transaction = Transaction.builder()
-                .transactionType(transactionType)
-                .account(account)
-                .amount(amount)
-                .customerId(customerId)
-                .build();
+        Transaction transaction = new Transaction();
+        transaction.setTransactionType(transactionType);
+        transaction.setAccount(account);
+        transaction.setAmount(amount);
+        transaction.setCustomerId(customerId);
 
         return transactionDao.save(transaction);
     }
